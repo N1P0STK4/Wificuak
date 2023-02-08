@@ -29,7 +29,7 @@ Este script fue probado solamente en el sistema operativo **Kali linux** por lo 
 Es bastante rápido:
 
 ```bash
-sudo git clone https://github.com/N1P0STK4/Wificuak.git | bash Wificuak/wificuak.sh
+sudo git clone https://github.com/N1P0STK4/Wificuak.git && bash Wificuak/wificuak.sh
 ```
 
 ## Demostración
