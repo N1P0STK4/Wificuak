@@ -620,15 +620,84 @@ function Desencriptar_PMKID(){
    read -p ""
 }
 
+function dependencies(){
+   clear
+   dependencies=(hashcat awk ip aircrack-ng xterm hcxdumptool hcxpcapngtool)
+   dependencies_faltantes=()
+
+   printf "[\033[1;31m*\033[0m]${grayColour} Comprobando programas necesarios...\033[0m\n"
+   sleep 2
+
+   for program in "${dependencies[@]}"; do
+      printf "\n[\033[1;31m*\033[0m] Herramienta\e[0;35m\033[1m $program\033[0m..."
+
+      test -f /usr/bin/$program
+
+      if [ "$(echo $?)" == "0" ]; then
+         printf " (\e[0;32m\033[1mV\033[0m)"
+      else
+         printf " (\033[1;31mX\033[0m)"
+         apt-get install $program -y > /dev/null 2>&1
+         dependencies_faltantes=("${dependencies_faltantes[@]}" $program)
+      fi
+
+      sleep 0.5
+   done
+   
+   if [ ! -z $dependencies_faltantes ] > /dev/null 2>&1;then
+      while :
+         do
+         printf "\n\nHay algunas dependencias que no se encontraron en su equipo ¿desas instalarlas? [Y/N]: "
+         read instalar
+         if [ $instalar 2> /dev/null == "y" ] || [ $instalar 2> /dev/null == "Y" ] 2> /dev/null;then
+            if [ "$(ping -c 1 8.8.8.8 > /dev/null; echo $?)" == "0" ] > /dev/null 2>&1;then
+               printf "\n"
+               for i in "${dependencies_faltantes[@]}"
+                  do
+                     printf "[\033[1;31m*\033[0m] Instalando herramienta \033[0m\e[0;36m\033[1m$program\033[0m..."
+                     apt-get install $program -y > /dev/null 2>&1
+               done
+               printf "\n\n  Instalado correctamente."
+               printf " \n\n  Presione \e[1;31m[Enter]\e[0m para \e[1;31mcontinuar\e[0m."
+               read -p "" 
+               clear
+
+               break
+            else
+               printf "\n  Revista la salida de conexion a \e[1;31minternet\e[0m es obligatorio para instalar los repositorios."
+                printf " \n\n  Presione \e[1;31m[Enter]\e[0m para \e[1;31mcontinuar\e[0m."
+                read -p "" 
+                clear
+            fi
+         else
+            if [ $instalar 2> /dev/null == "n" ] || [ $instalar 2> /dev/null == "N" ] > /dev/null 2>&1;then
+               break
+            else
+                  printf "\n  Seleccione la opcion correcta porfavor."
+                  printf " \n\n  Presione \e[1;31m[Enter]\e[0m para \e[1;31mcontinuar\e[0m."
+                  read -p "" 
+                  clear
+            fi
+         fi    
+      done
+   else
+      printf "\n\n  Estan todas las dependencias necesarias."
+      printf " \n\n  Presione \e[1;31m[Enter]\e[0m para \e[1;31mcontinuar\e[0m."
+      read -p ""
+   fi
+
+}
+
 while :
 do
 
 clear
-printf "\n\e[1;31m ██     ██ ██ ███████ ██  ██████ ██    ██  █████  ██   ██\e[0m\n"
-printf "\e[1;31m ██     ██ ██ ██      ██ ██      ██    ██ ██   ██ ██  ██ \e[0m\n"
-printf "\e[1;31m ██  █  ██ ██ █████   ██ ██      ██    ██ ███████ █████  \e[0m\n"
-printf "\e[1;31m ██ ███ ██ ██ ██      ██ ██      ██    ██ ██   ██ ██  ██ \e[0m\n"
-printf "\e[1;31m  ███ ███  ██ ██      ██  ██████  ██████  ██   ██ ██   ██\e[0m\n"
+echo -e "\e[1;31m"
+echo -e " ██     ██ ██ ███████ ██  ██████ ██    ██  █████  ██   ██ "
+echo -e " ██     ██ ██ ██      ██ ██      ██    ██ ██   ██ ██  ██  "
+echo -e " ██  █  ██ ██ █████   ██ ██      ██    ██ ███████ █████   "
+echo -e " ██ ███ ██ ██ ██      ██ ██      ██    ██ ██   ██ ██  ██  "
+echo -e "  ███ ███  ██ ██      ██  ██████  ██████  ██   ██ ██   ██ \e[0m"
 
 printf "\n Herramienta solo para el uso etico"
 printf "\n By N1P0STK4"
@@ -652,6 +721,7 @@ printf "\n \e[1;31m[\e[0m\e[1;37m7\e[0m\e[1;31m]\e[0m Ataque DOS."
 printf "\n \e[1;31m[\e[0m\e[1;37m8\e[0m\e[1;31m]\e[0m Ataque WEP."
 printf "\n \e[1;31m[\e[0m\e[1;37m9\e[0m\e[1;31m]\e[0m Ataque PMKID."
 printf "\n \e[1;31m[\e[0m\e[1;37m10\e[0m\e[1;31m]\e[0m Desencriptar PMKID."
+printf "\n\n \e[1;31m[\e[0m\e[1;37m99\e[0m\e[1;31m]\e[0m Añadir repositorios necesarios."
 
 printf "\n\n  Opcion a elegir: "
 read opcion
@@ -691,6 +761,9 @@ case $opcion in
   ;;
   10)
     Desencriptar_PMKID
+  ;;
+  99)
+    dependencies
   ;;
   *)
     printf "\n  Selecciona la opcion correcta porfavor."
