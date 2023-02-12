@@ -622,22 +622,22 @@ function Desencriptar_PMKID(){
 
 function dependencies(){
    clear
-   dependencies=(hashcat awk ip aircrack-ng xterm hcxdumptool hcxpcapngtool)
+   dependencies=(hashcat awk ip aircrack-ng xterm hcxdumptool hcxtools)
    dependencies_faltantes=()
 
-   printf "[\033[1;31m*\033[0m]${grayColour} Comprobando programas necesarios...\033[0m\n"
+   printf "[\033[1;31m*\033[0m] Comprobando programas necesarios...\033[0m\n"
    sleep 2
 
    for program in "${dependencies[@]}"; do
-      printf "\n[\033[1;31m*\033[0m] Herramienta\e[0;35m\033[1m $program\033[0m..."
+      printf "\n [\033[1;31m*\033[0m] Herramienta\e[0;35m\033[1m $program\033[0m..."
 
-      test -f /usr/bin/$program
+      comprobar_instalacion_test=$(test -f /usr/bin/$program;echo $?)
+      comprobar_instalacion_apt=$(apt -qq list $program 2> /dev/null | cut -d "[" -f 2 | cut -d "]" -f1 | cut -d "," -f1)
 
-      if [ "$(echo $?)" == "0" ]; then
+      if [ $comprobar_instalacion_test == "0" ] || [ "$comprobar_instalacion_apt" == "installed" ]; then
          printf " (\e[0;32m\033[1mV\033[0m)"
       else
          printf " (\033[1;31mX\033[0m)"
-         apt-get install $program -y > /dev/null 2>&1
          dependencies_faltantes=("${dependencies_faltantes[@]}" $program)
       fi
 
@@ -649,14 +649,15 @@ function dependencies(){
          do
          printf "\n\nHay algunas dependencias que no se encontraron en su equipo ¿desas instalarlas? [Y/N]: "
          read instalar
-         if [ $instalar 2> /dev/null == "y" ] || [ $instalar 2> /dev/null == "Y" ] 2> /dev/null;then
-            if [ "$(ping -c 1 8.8.8.8 > /dev/null; echo $?)" == "0" ] > /dev/null 2>&1;then
+         if [ $instalar == "y" ] || [ $instalar == "Y" ] ;then
+            if [ "$(ping -c 1 8.8.8.8 > /dev/null; echo $?)" == "0" ] ;then
                printf "\n"
-               for i in "${dependencies_faltantes[@]}"
+               for program in "${dependencies_faltantes[@]}"
                   do
-                     printf "[\033[1;31m*\033[0m] Instalando herramienta \033[0m\e[0;36m\033[1m$program\033[0m..."
+                     printf " [\033[1;31m*\033[0m] Instalando herramienta \033[0m\e[0;36m\033[1m$program\033[0m...\n"
                      apt-get install $program -y > /dev/null 2>&1
                done
+               printf "\n  ---------------------------------------------------------"
                printf "\n\n  Instalado correctamente."
                printf " \n\n  Presione \e[1;31m[Enter]\e[0m para \e[1;31mcontinuar\e[0m."
                read -p "" 
@@ -670,7 +671,7 @@ function dependencies(){
                 clear
             fi
          else
-            if [ $instalar 2> /dev/null == "n" ] || [ $instalar 2> /dev/null == "N" ] > /dev/null 2>&1;then
+            if [ $instalar == "n" ] || [ $instalar == "N" ] ;then
                break
             else
                   printf "\n  Seleccione la opcion correcta porfavor."
