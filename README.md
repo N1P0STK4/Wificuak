@@ -1,40 +1,40 @@
-# Wificuak auditor de redes wi-fi
+# Wificuak wifi network auditor
 
-Es una herramienta intuitiva escrita totalmente en bash que recopila varias herramientas en una sola para que sea mas facil la explotacion de los AP, tambien es compatible con 5ghz haciéndola más versátil.
+It is an intuitive tool written entirely in Bash that compiles several tools into one to make it easier to exploit APs. It is also compatible with 5GHz, making it more versatile.
 
-Este script fue probado solamente en el sistema operativo **Kali linux** por lo que en los demás sistemas puede contener algún error inesperado, sería de agradecer que si se encontrara algún bug/error fuera reportado.
+This script was only tested on the **Kali Linux** operating system, so on other systems it may contain some unexpected errors. It would be appreciated if any bugs were found if they were reported.
 
-## Funciones
+## Features
 
-#### - Se pretende seguir aumentando y mejorando el número de funciones. - 
+#### - It is intended to continue increasing and improving the number of functions. - 
 
-▶️ Poner interfaz en modo monitor.
+▶️ Put interface in monitor mode.
 
-▶️ Poner interfaz en modo manager.
+▶️ Put interface in manager mode.
 
-▶️ Obtener hadshake | (airodump-ng).
+▶️ Get handshake | (airodump-ng).
 
-▶️ Desencriptar handshake utilizando diccionario propio | (aircrack-ng).
+▶️ Decrypt handshake using own dictionary | (aircrack-ng).
 
-▶️ Obtener PMKID | (hcxdumptool).
+▶️ Get PMKID | (hcxdumptool).
 
-▶️ Desencriptar PMKID utilizando diccionario propio | (hcxpcapngtool y hashcat).
+▶️ Decrypt PMKID using own dictionary | (hcxpcapngtool y hashcat).
 
-▶️ Ataque hacia redes WEP | (airodump-ng y aircrack-ng).
+▶️ Attack on WEP networks | (airodump-ng y aircrack-ng).
 
-▶️ Ataque DOS | (aireplay-ng).
+▶️ DOS attack | (aireplay-ng).
 
-## Para poder usar
+## In order to use
 
-Es bastante rápido:
+It's pretty fast:
 
 ```bash
 sudo git clone https://github.com/N1P0STK4/Wificuak.git && bash Wificuak/wificuak.sh
 ```
 
-## Demostración
+## Demonstration
 
 <img src="https://raw.githubusercontent.com/N1P0STK4/Wificuak/main/images/wificuak.png">
 
-#### Para poder seleccionar la red
+#### To be able to select the network
 <img src="https://raw.githubusercontent.com/N1P0STK4/Wificuak/main/images/scaneo.png">
